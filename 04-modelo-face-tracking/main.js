@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     occluder.scene.position.set(0, -0.3, 0.15);
     occluder.scene.traverse((o) => {
       if (o.isMesh) {
-	o.material = occluderMaterial;
+	     o.material = occluderMaterial;
       }
     });
     occluder.scene.renderOrder = 0; // tem que renderizar antes do óculos, se não não adianta
@@ -116,14 +116,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-//botão para iniciar
+      //botão para iniciar
+
       const startButton = document.querySelector("#startButton");
       startButton.addEventListener("click", () => {
   start();
       });
-  //     stopButton.addEventListener("click", () => {
-  // mindarThree.stop();
-  // mindarThree.renderer.setAnimationLoop(null);
-  //     });
+            stopButton.addEventListener("click", () => {
+  mindarThree.stop();
+  mindarThree.renderer.setAnimationLoop(null);
+      });
+
+
 
 });
