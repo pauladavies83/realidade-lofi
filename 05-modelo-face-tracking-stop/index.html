@@ -145,6 +145,12 @@ occluder.scene.renderOrder = 0; // tem que renderizar antes do óculos, se não 
 </script>
 <style>
   html, body {position: relative; margin: 0; width: 100%; height: 100%; overflow: hidden}
+  #ar-box {
+height: 720px;
+width: 480px;
+position: relative;
+overflow: hidden; // pra não vazar a proporção do vídeo pra fora do width
+}
   #capture {
     position: fixed;
     bottom: 2vh;
