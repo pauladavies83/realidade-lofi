@@ -1,8 +1,5 @@
-
 import {loadGLTF} from "../libs/loader.js";
-
 import * as THREE from '../libs/three.js-r132/build/three.module.js';
-
 import {ARButton} from '../libs/three.js-r132/examples/jsm/webxr/ARButton.js';
 
 const normalizeModel = (obj, height) => {
@@ -56,11 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(renderer.domElement);
     document.body.appendChild(arButton);
 
-    const itemNames = ['coffee-table', 'chair', 'cushion'];
-    const itemHeights = [0.5, 0.7, 0.05];
+    const itemNames = ['fishpond', 'glasses', 'cushion'];
+    const itemHeights = [2, 0.7, 0.05];
     const items = [];
     for (let i = 0; i < itemNames.length; i++) {
-      const model = await loadGLTF('../assets/models/' + itemNames[i] + '/scene.gltf');
+      const model = await loadGLTF('../assets/' + itemNames[i] + '/scene.gltf');
       normalizeModel(model.scene, itemHeights[i]);
       const item = new THREE.Group();
       item.add(model.scene);
