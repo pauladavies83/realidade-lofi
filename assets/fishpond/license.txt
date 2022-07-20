@@ -1,0 +1,11 @@
+Model Information:
+* title:	Fish-pond
+* source:	https://sketchfab.com/3d-models/fish-pond-9ddd7c5da4a74371b400e81e4cfbec0c
+* author:	The British Museum (https://sketchfab.com/britishmuseum)
+
+Model License:
+* license type:	CC-BY-NC-SA-4.0 (http://creativecommons.org/licenses/by-nc-sa/4.0/)
+* requirements:	Author must be credited. No commercial use. Modified versions must have the same license.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Fish-pond" (https://sketchfab.com/3d-models/fish-pond-9ddd7c5da4a74371b400e81e4cfbec0c) by The British Museum (https://sketchfab.com/britishmuseum) licensed under CC-BY-NC-SA-4.0 (http://creativecommons.org/licenses/by-nc-sa/4.0/)

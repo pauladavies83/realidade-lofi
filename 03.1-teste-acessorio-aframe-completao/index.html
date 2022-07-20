@@ -1,0 +1,202 @@
+
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-face.prod.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-face-aframe.prod.js"></script>
+      <script src="../libs/mindar/mindar-face-three.prod.js"></script>
+
+ <script src="../libs/mindar/mindar-face-three.prod.js"></script>
+  <script type="module">
+    const THREE = window.MINDAR.FACE.THREE;
+    const capture = (mindarThree) => {
+      const {video, renderer, scene, camera} = mindarThree;
+      const renderCanvas = renderer.domElement;
+
+  // output canvas
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+  canvas.width = renderCanvas.width;
+  canvas.height = renderCanvas.height;
+
+  const sx = (video.clientWidth - renderCanvas.clientWidth) / 2 * video.videoWidth / video.clientWidth;
+  const sy = (video.clientHeight - renderCanvas.clientHeight) / 2 * video.videoHeight / video.clientHeight;
+  const sw = video.videoWidth - sx * 2; 
+  const sh = video.videoHeight - sy * 2; 
+
+  context.drawImage(video, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+  
+  renderer.preserveDrawingBuffer = true;
+  renderer.render(scene, camera); // empty if not run
+  context.drawImage(renderCanvas, 0, 0, canvas.width, canvas.height);
+  renderer.preserveDrawingBuffer = false;
+
+  //ao invés de baixar, como no exemplo anterior, é para subir / share
+  const data = canvas.toDataURL('image/png');
+  return data;
+}
+
+    //captura de imagem
+    const previewImage = document.querySelector("#preview-image");
+    const previewClose = document.querySelector("#preview-close");
+    const preview = document.querySelector("#preview");
+    const previewShare = document.querySelector("#preview-share");
+
+    document.querySelector("#capture").addEventListener("click", () => {
+      const data = capture(mindarThree);
+      preview.style.visibility = "visible";
+      previewImage.src = data;
+    });
+
+    previewClose.addEventListener("click", () => {
+      preview.style.visibility = "hidden";
+    });
+
+    previewShare.addEventListener("click", () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = previewImage.width;
+      canvas.height = previewImage.height;
+      const context = canvas.getContext('2d');
+      context.drawImage(previewImage, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob((blob) => {
+        const file = new File([blob], "photo.png", {type: "image/png"});
+        const files = [file];
+        if (navigator.canShare && navigator.canShare({files})) {
+          navigator.share({
+            files: files,
+            title: 'AR Photo',
+          })
+        } else {
+          const link = document.createElement('a');
+          link.download = 'photo.png';
+          link.href = previewImage.src;
+          link.click();
+        }
+      });
+    });
+
+  // trocar a câmera do dispositivo
+  document.querySelector("#switch").addEventListener("click", () => {
+    mindarThree.switchCamera();
+  });
+
+
+</script>
+<style>
+  html, body {position: relative; margin: 0; width: 100%; height: 100%; overflow: hidden}
+  #ar-box {
+height: 720px;
+width: 480px;
+position: relative;
+overflow: hidden; // pra não vazar a proporção do vídeo pra fora do width
+}
+  #capture {
+    position: fixed;
+    bottom: 2vh;
+    left: 50%;
+    height: 12vw;
+    width: 12vw;
+    border: solid 2px;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+  }
+  #preview {
+    position: fixed;
+    z-index: 10;
+    left: 10%;
+    top: 10%;
+    width: 80%;
+    height: 80%;
+    border: solid 10px white;
+    visibility: hidden;
+  }
+  #preview-image {
+    width: 100%;
+    height: 100%;
+  }
+  #preview-close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 20px;
+    padding: 5px;
+    border: solid 1px;
+    cursor: pointer;
+    color: white;
+    border: solid 5px white;
+    right: -5px;
+    top: -5px;
+  }
+  #preview-share {
+    border: solid 1px;
+    text-align: center;
+    cursor: pointer;
+    background: white;
+
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 10px;
+    padding: 10px 30px;
+    border-radius: 10px;
+    border: none;
+  }
+  body {
+    margin: 0;
+  }
+  #container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+  #control {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+  #switch {
+    position: fixed;
+    bottom: 5px;
+    left: 0;
+    left: 0;
+    z-index: 2;
+  }
+</style>
+
+  </head>
+  <body>
+    <a-scene mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-assets>
+  <a-asset-item id="glassesModel" src="../assets/glasses/scene.gltf"></a-asset-item>
+  <a-asset-item id="headModel" src="../assets/sparkar-occluder/headOccluder.glb"></a-asset-item>
+      </a-assets>
+
+      <a-camera active="false" position="0 0 0"></a-camera>
+      <a-entity mindar-face-target="anchorIndex: 168">
+        <a-gltf-model mindar-face-occluder position="0 -0.3 0.15"rotation="0 0 0" scale="0.065 0.065 0.065" src="#headModel"></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-face-target="anchorIndex: 1">
+        <a-gltf-model rotation="0 0 0" position="0 0 0" scale="0.0045 0.0045 0.0045" src="#glassesModel"></a-gltf-model>
+      </a-entity>
+    </a-scene>
+
+<button id="capture"></button>
+ <div id="preview">
+  <div id="preview-close">X</div>
+  <img id="preview-image"/>
+  <div id="preview-share">Share</div>
+</div>
+<div id="control">
+  <button id="startButton">Start</button>
+  <button id="stopButton">Stop</button>
+</div>
+<div id="container">
+</div>
+<button id="switch">Trocar a camera</button> // acrescenta o botão de trocar câmera
+  </body>
+</html>
